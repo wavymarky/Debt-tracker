@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#ffffff !important; color-scheme: light only;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title>Daily Money System</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap');
+  :root { color-scheme: light only; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-text-fill-color: inherit; }
+  html, body { background-color: #ffffff !important; color: #1a1a1a !important; font-family: 'Lato', Arial, sans-serif; max-width: 460px; margin: 0 auto; padding: 20px 18px 60px; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 5px; margin-bottom: 22px; background: #f4f4f4; padding: 4px; border-radius: 10px; }
+  .tab { flex: 1; text-align: center; padding: 8px 2px; font-size: 10.5px; font-weight: 700; color: #999 !important; -webkit-text-fill-color: #999; border-radius: 7px; cursor: pointer; transition: all 0.15s; line-height: 1.3; }
+  .tab.active { background: #ffffff !important; color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* SHARED */
+  .hd-eye { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #aaa !important; -webkit-text-fill-color: #aaa; margin-bottom: 4px; }
+  .hd-title { font-size: 26px; font-weight: 900; color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a; }
+  .hd-date { font-size: 13px; color: #aaa !important; -webkit-text-fill-color: #aaa; margin-top: 3px; margin-bottom: 22px; }
+  .sec-title { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #aaa !important; -webkit-text-fill-color: #aaa; margin-bottom: 9px; }
+  .sec { margin-bottom: 26px; }
+  .card { border: 1.5px solid #e8e8e8; border-radius: 10px; background: #ffffff !important; overflow: hidden; }
+  .card-row { display: flex; justify-content: space-between; align-items: center; padding: 11px 14px; border-bottom: 1px solid #f0f0f0; background: #ffffff !important; }
+  .card-row:last-child { border-bottom: none; }
+  .card-hd { background: #f9f9f9 !important; padding: 8px 14px; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #aaa !important; -webkit-text-fill-color: #aaa; border-bottom: 1px solid #f0f0f0; }
+  .lbl { font-size: 13.5px; color: #555 !important; -webkit-text-fill-color: #555; }
+  .lbl.bold { font-weight: 700; color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a; }
+  .val { font-size: 14px; font-weight: 700; color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a; }
+  .val.red { color: #e74c3c !important; -webkit-text-fill-color: #e74c3c; }
+  .val.blue { color: #2980b9 !important; -webkit-text-fill-color: #2980b9; }
+  .val.green { color: #27ae60 !important; -webkit-text-fill-color: #27ae60; }
+  .val.orange { color: #e67e22 !important; -webkit-text-fill-color: #e67e22; }
+  .btn-primary { width: 100%; padding: 14px; background: #1a1a1a !important; color: #fff !important; -webkit-text-fill-color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .btn-primary:active { opacity: .85; }
+  .input-label { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #aaa !important; -webkit-text-fill-color: #aaa; margin-bottom: 6px; display: block; }
+  .field-wrap { display: flex; align-items: center; gap: 6px; border: 1.5px solid #e8e8e8; border-radius: 10px; padding: 10px 14px; background: #fff !important; }
+  .field-prefix { font-size: 18px; font-weight: 700; color: #aaa !important; -webkit-text-fill-color: #aaa; }
+  .field-suffix { font-size: 14px; font-weight: 700; color: #aaa !important; -webkit-text-fill-color: #aaa; }
+  .field-input { flex: 1; font-size: 22px; font-weight: 900; color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a; background: transparent !important; border: none; outline: none; font-family: 'Lato', Arial, sans-serif; -webkit-appearance: none; width: 100%; }
+  .toggle-row { display: flex; gap: 8px; }
+  .toggle-btn { flex: 1; padding: 10px 6px; border: 1.5px solid #e8e8e8; border-radius: 10px; background: #fff !important; font-size: 12.5px; font-weight: 700; color: #999 !important; -webkit-text-fill-color: #999; cursor: pointer; text-align: center; -webkit-tap-highlight-color: transparent; }
+  .toggle-btn.active { background: #1a1a1a !important; border-color: #1a1a1a; color: #fff !important; -webkit-text-fill-color: #fff; }
+  .hint { font-size: 10.5px; color: #bbb !important; -webkit-text-fill-color: #bbb; margin-top: 4px; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .mini-card { border: 1.5px solid #e8e8e8; border-radius: 10px; padding: 12px 13px; background: #fff !important; }
+  .mini-label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #aaa !important; -webkit-text-fill-color: #aaa; margin-bottom: 5px; display: block; }
+  .mini-field { display: flex; align-items: center; gap: 4px; }
+  .mini-input { flex: 1; font-size: 20px; font-weight: 900; color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a; background: transparent !important; border: none; outline: none; font-family: 'Lato', Arial, sans-serif; -webkit-appearance: none; width: 100%; }
+
+  /* SYSTEM PAGE */
+  .zone { display: flex; align-items: flex-start; gap: 13px; padding: 13px 15px; border-radius: 10px; border: 1.5px solid #e8e8e8; margin-bottom: 7px; cursor: pointer; background: #fff !important; transition: border-color .15s, background-color .15s; }
+  .zone-dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+  .zone.stop .zone-dot    { background: #e74c3c !important; }
+  .zone.caution .zone-dot { background: #f39c12 !important; }
+  .zone.normal .zone-dot  { background: #27ae60 !important; }
+  .zone.attack .zone-dot  { background: #2980b9 !important; }
+  .zone.stop.active    { background: #fff6f6 !important; border-color: #e74c3c; }
+  .zone.caution.active { background: #fffbf3 !important; border-color: #f39c12; }
+  .zone.normal.active  { background: #f4fff7 !important; border-color: #27ae60; }
+  .zone.attack.active  { background: #f3f8ff !important; border-color: #2980b9; }
+  .zone-body { flex: 1; }
+  .zone-top { display: flex; justify-content: space-between; align-items: baseline; }
+  .zone-name { font-size: 15px; font-weight: 700; color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a; }
+  .zone-range { font-size: 12px; color: #999 !important; -webkit-text-fill-color: #999; }
+  .zone-action { display: none; margin-top: 6px; font-size: 13px; color: #555 !important; -webkit-text-fill-color: #555; line-height: 1.6; }
+  .zone.active .zone-action { display: block; }
+  .payday-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .pd-card { border: 1.5px solid #e8e8e8; border-radius: 10px; padding: 13px; background: #fff !important; }
+  .pd-date { font-size: 22px; font-weight: 900; color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a; margin-bottom: 11px; }
+  .pd-row { display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; padding: 5px 0; border-top: 1px solid #f0f0f0; gap: 6px; }
+  .pd-row:first-of-type { border-top: none; }
+  .pd-lbl { color: #777 !important; -webkit-text-fill-color: #777; flex: 1; line-height: 1.4; }
+  .pd-val { font-weight: 700; color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a; white-space: nowrap; }
+  .bill-check { width: 22px; height: 22px; border: 2px solid #ddd; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #fff !important; -webkit-text-fill-color: #fff; flex-shrink: 0; background: #fff !important; transition: all .15s; }
+  .bill-check.done { background: #27ae60 !important; border-color: #27ae60; }
+  .rules-list { display: flex; flex-direction: column; gap: 7px; }
+  .rule { display: flex; align-items: flex-start; gap: 10px; font-size: 13.5px; padding: 11px 13px; background: #fafafa !important; border-radius: 8px; border: 1.5px solid #e8e8e8; line-height: 1.4; color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a; }
+  .loop-card { border: 1.5px solid #1a1a1a; border-radius: 10px; padding: 16px; text-align: center; background: #fff !important; }
+  .loop-steps { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+  .loop-step { background: #1a1a1a !important; color: #fff !important; -webkit-text-fill-color: #fff; font-size: 12px; font-weight: 700; padding: 6px 11px; border-radius: 20px; }
+  .loop-arr { color: #ccc !important; -webkit-text-fill-color: #ccc; }
+  .outcomes { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; }
+  .outcome { background: #f4fff7 !important; border: 1.5px solid #c3ecd1; border-radius: 8px; padding: 9px 6px; font-size: 11px; font-weight: 700; color: #27ae60 !important; -webkit-text-fill-color: #27ae60; line-height: 1.4; text-align: center; }
+
+  /* CALC PAGE */
+  .hrs-row { display: flex; align-items: center; border: 1.5px solid #e8e8e8; border-radius: 10px; overflow: hidden; background: #fff !important; }
+  .hrs-btn { width: 48px; height: 48px; font-size: 22px; background: #f9f9f9 !important; color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
+  .hrs-btn:active { background: #eee !important; }
+  .hrs-disp { flex: 1; text-align: center; font-size: 22px; font-weight: 900; color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a; background: #fff !important; border: none; outline: none; padding: 0; -webkit-appearance: none; }
+  .sub-note { font-size: 11px; color: #aaa !important; -webkit-text-fill-color: #aaa; text-align: center; margin-top: 4px; }
+  .extra-hd { display: flex; justify-content: space-between; align-items: center; padding: 10px 13px; border-bottom: 1px solid #f0f0f0; background: #f9f9f9 !important; }
+  .add-btn { font-size: 12px; font-weight: 700; color: #2980b9 !important; -webkit-text-fill-color: #2980b9; background: none; border: none; cursor: pointer; }
+  .ei-row { display: flex; align-items: center; gap: 7px; padding: 8px 13px; border-bottom: 1px solid #f5f5f5; }
+  .ei-row:last-child { border-bottom: none; }
+  .ei-lbl { flex: 1; font-size: 13px; color: #555 !important; -webkit-text-fill-color: #555; background: transparent !important; border: none; outline: none; font-family: 'Lato', Arial, sans-serif; }
+  .ei-amt { width: 80px; text-align: right; font-size: 13px; font-weight: 700; color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a; background: transparent !important; border: none; outline: none; font-family: 'Lato', Arial, sans-serif; -webkit-appearance: none; }
+  .ei-sym { font-size: 12px; color: #aaa !important; -webkit-text-fill-color: #aaa; }
+  .ei-rm { font-size: 16px; color: #ccc !important; -webkit-text-fill-color: #ccc; background: none; border: none; cursor: pointer; padding: 0 2px; }
+  .ei-empty { padding: 11px 13px; font-size: 12px; color: #bbb !important; -webkit-text-fill-color: #bbb; text-align: center; }
+  .mins-section { transition: opacity .2s; }
+  .mins-section.dimmed { opacity: .35; pointer-events: none; }
+  .gross-banner { background: #1a1a1a !important; border-radius: 12px; padding: 16px; text-align: center; margin-bottom: 12px; }
+  .gb-lbl { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #777 !important; -webkit-text-fill-color: #777; margin-bottom: 3px; }
+  .gb-amt { font-size: 40px; font-weight: 900; color: #fff !important; -webkit-text-fill-color: #fff; line-height: 1; }
+  .gb-sub { font-size: 12px; color: #666 !important; -webkit-text-fill-color: #666; margin-top: 4px; white-space: pre-line; }
+  .pills-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  .pill { border: 1.5px solid #e8e8e8; border-radius: 10px; padding: 10px 8px; text-align: center; background: #fff !important; }
+  .pill-lbl { font-size: 9px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #aaa !important; -webkit-text-fill-color: #aaa; margin-bottom: 3px; }
+  .pill-val { font-size: 15px; font-weight: 900; color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a; }
+  .pill-val.red { color: #e74c3c !important; -webkit-text-fill-color: #e74c3c; }
+  .pill-val.blue { color: #2980b9 !important; -webkit-text-fill-color: #2980b9; }
+  .chase-box { background: #f3f8ff !important; border: 2px solid #2980b9; border-radius: 10px; padding: 15px; text-align: center; margin-bottom: 12px; }
+  .cb-lbl { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #2980b9 !important; -webkit-text-fill-color: #2980b9; margin-bottom: 3px; }
+  .cb-amt { font-size: 38px; font-weight: 900; color: #2980b9 !important; -webkit-text-fill-color: #2980b9; line-height: 1; }
+  .cb-sub { font-size: 12px; color: #777 !important; -webkit-text-fill-color: #777; margin-top: 5px; }
+  .warn-box { background: #fff6f6 !important; border: 1.5px solid #e74c3c; border-radius: 10px; padding: 13px; font-size: 13px; color: #e74c3c !important; -webkit-text-fill-color: #e74c3c; font-weight: 700; text-align: center; margin-bottom: 12px; }
+  .proof { text-align: center; font-size: 11px; color: #bbb !important; -webkit-text-fill-color: #bbb; padding: 2px 0 8px; line-height: 1.6; }
+
+  /* CARDS PAGE */
+  .card-priority { display: flex; align-items: center; gap: 12px; padding: 13px 15px; border-radius: 10px; border: 1.5px solid #e8e8e8; margin-bottom: 8px; background: #fff !important; }
+  .cp-badge { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; flex-shrink: 0; }
+  .cp-badge.p1 { background: #ffeaea !important; color: #e74c3c !important; -webkit-text-fill-color: #e74c3c; }
+  .cp-badge.p2 { background: #fff3e8 !important; color: #e67e22 !important; -webkit-text-fill-color: #e67e22; }
+  .cp-badge.p3 { background: #eaf4ff !important; color: #2980b9 !important; -webkit-text-fill-color: #2980b9; }
+  .cp-body { flex: 1; }
+  .cp-name { font-size: 15px; font-weight: 700; color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a; }
+  .cp-apr { font-size: 12px; color: #aaa !important; -webkit-text-fill-color: #aaa; margin-top: 1px; }
+  .cp-est { text-align: right; }
+  .cp-est-val { font-size: 16px; font-weight: 900; color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a; }
+  .cp-est-lbl { font-size: 10px; color: #aaa !important; -webkit-text-fill-color: #aaa; }
+  .estimator-card { border: 1.5px solid #e8e8e8; border-radius: 10px; overflow: hidden; background: #fff !important; margin-bottom: 12px; }
+  .est-card-hd { display: flex; justify-content: space-between; align-items: center; padding: 11px 14px; border-bottom: 1px solid #f0f0f0; background: #f9f9f9 !important; }
+  .est-card-name { font-size: 14px; font-weight: 700; color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a; }
+  .est-card-apr { font-size: 11px; color: #aaa !important; -webkit-text-fill-color: #aaa; }
+  .est-body { padding: 12px 14px; }
+  .est-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; font-size: 13px; border-bottom: 1px solid #f5f5f5; }
+  .est-row:last-child { border-bottom: none; }
+  .est-lbl { color: #777 !important; -webkit-text-fill-color: #777; }
+  .est-val { font-weight: 700; color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a; }
+  .est-val.red { color: #e74c3c !important; -webkit-text-fill-color: #e74c3c; }
+  .est-val.orange { color: #e67e22 !important; -webkit-text-fill-color: #e67e22; }
+  .bal-input-sm { width: 100%; font-size: 18px; font-weight: 900; color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a; background: transparent !important; border: none; outline: none; font-family: 'Lato', Arial, sans-serif; -webkit-appearance: none; }
+
+  /* TRACKER PAGE */
+  .tracker-bal-display { font-size: 42px; font-weight: 900; color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a; margin-bottom: 14px; line-height: 1; }
+  .payoff-box { background: #f3f8ff !important; border: 2px solid #2980b9; border-radius: 12px; padding: 16px; text-align: center; margin-bottom: 14px; }
+  .pb-lbl { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #2980b9 !important; -webkit-text-fill-color: #2980b9; margin-bottom: 5px; }
+  .pb-val { font-size: 44px; font-weight: 900; color: #2980b9 !important; -webkit-text-fill-color: #2980b9; line-height: 1; }
+  .pb-unit { font-size: 14px; color: #2980b9 !important; -webkit-text-fill-color: #2980b9; margin-top: 3px; }
+  .pb-sub { font-size: 12px; color: #777 !important; -webkit-text-fill-color: #777; margin-top: 7px; line-height: 1.5; }
+  .prog-wrap { margin-bottom: 14px; }
+  .prog-top { display: flex; justify-content: space-between; font-size: 12px; color: #777 !important; -webkit-text-fill-color: #777; margin-bottom: 5px; }
+  .prog-bg { background: #f0f0f0 !important; border-radius: 99px; height: 10px; overflow: hidden; }
+  .prog-fill { background: #2980b9 !important; height: 100%; border-radius: 99px; transition: width .5s ease; }
+  .stat-card { border: 1.5px solid #e8e8e8; border-radius: 10px; padding: 13px 15px; background: #fff !important; margin-bottom: 14px; }
+  .stat-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 5px 0; border-bottom: 1px solid #f5f5f5; }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-lbl { color: #777 !important; -webkit-text-fill-color: #777; }
+  .stat-val { font-weight: 700; color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a; }
+  .hist-row { display: flex; align-items: center; gap: 9px; padding: 10px 13px; border-bottom: 1px solid #f0f0f0; background: #fff !important; }
+  .hist-row:last-child { border-bottom: none; }
+  .hist-date { font-size: 11px; color: #aaa !important; -webkit-text-fill-color: #aaa; width: 60px; flex-shrink: 0; }
+  .hist-amt { font-size: 14px; font-weight: 700; color: #2980b9 !important; -webkit-text-fill-color: #2980b9; flex: 1; }
+  .hist-src { font-size: 10px; color: #ccc !important; -webkit-text-fill-color: #ccc; }
+  .hist-del { font-size: 13px; color: #ddd !important; -webkit-text-fill-color: #ddd; background: none; border: none; cursor: pointer; padding: 0 2px; flex-shrink: 0; }
+  .clear-btn { font-size: 11px; font-weight: 700; color: #e74c3c !important; -webkit-text-fill-color: #e74c3c; background: none; border: none; cursor: pointer; }
+  .hist-empty { padding: 16px; text-align: center; font-size: 12px; color: #bbb !important; -webkit-text-fill-color: #bbb; }
+  .log-row { display: flex; gap: 8px; align-items: center; }
+  .log-field { display: flex; align-items: center; gap: 6px; border: 1.5px solid #e8e8e8; border-radius: 10px; padding: 10px 13px; flex: 1; background: #fff !important; }
+  .log-sym { font-size: 16px; font-weight: 700; color: #aaa !important; -webkit-text-fill-color: #aaa; }
+  .log-input { flex: 1; font-size: 22px; font-weight: 900; color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a; background: transparent !important; border: none; outline: none; font-family: 'Lato', Arial, sans-serif; -webkit-appearance: none; width: 100%; }
+  .log-btn { padding: 12px 16px; background: #1a1a1a !important; color: #fff !important; -webkit-text-fill-color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap; -webkit-tap-highlight-color: transparent; }
+  /* CUSTOM NUMPAD */
+  .numpad-overlay { display: none; position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 460px; z-index: 9999; background: #d1d5db; padding: 6px 4px 24px; box-shadow: 0 -2px 20px rgba(0,0,0,0.15); }
+  .numpad-overlay.open { display: block; }
+  .numpad-display { background: #fff !important; margin: 0 4px 6px; border-radius: 10px; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; }
+  .numpad-label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #aaa !important; -webkit-text-fill-color: #aaa; }
+  .numpad-value { font-size: 26px; font-weight: 900; color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a; min-width: 60px; text-align: right; }
+  .numpad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; padding: 0 4px; }
+  .np-btn { background: #fff !important; border: none; border-radius: 8px; padding: 16px 0; font-size: 22px; font-weight: 400; color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a; cursor: pointer; text-align: center; -webkit-tap-highlight-color: transparent; box-shadow: 0 1px 0 #999; font-family: 'Lato', Arial, sans-serif; }
+  .np-btn:active { opacity: .5; }
+  .np-btn.dark { background: #adb5bd !important; font-size: 16px; font-weight: 700; }
+  .np-btn.done-btn { background: #1a1a1a !important; color: #fff !important; -webkit-text-fill-color: #fff; font-size: 16px; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('system')">📋 System</div>
+  <div class="tab" onclick="switchTab('calc')">🧮 Calc</div>
+  <div class="tab" onclick="switchTab('cards')">💳 Cards</div>
+  <div class="tab" onclick="switchTab('tracker')">📈 Chase</div>
+</div>
+
+
+<!-- ════════════════ SYSTEM ════════════════ -->
+<div class="page active" id="page-system">
+  <div class="hd-eye">Financial System</div>
+  <div class="hd-title">Daily Money Check</div>
+  <div class="hd-date" id="dateDisplay"></div>
+
+  <div class="sec">
+    <div class="sec-title">Checking Balance — Tap Your Zone</div>
+    <div class="zone stop" onclick="setZone(this)">
+      <div class="zone-dot"></div>
+      <div class="zone-body">
+        <div class="zone-top"><div class="zone-name">🛑 Stop</div><div class="zone-range">Under $500</div></div>
+        <div class="zone-action">No extra payments. Essentials only.</div>
+      </div>
+    </div>
+    <div class="zone caution" onclick="setZone(this)">
+      <div class="zone-dot"></div>
+      <div class="zone-body">
+        <div class="zone-top"><div class="zone-name">⚠️ Caution</div><div class="zone-range">$500 – $700</div></div>
+        <div class="zone-action">Follow the plan only. No aggressive payments.</div>
+      </div>
+    </div>
+    <div class="zone normal" onclick="setZone(this)">
+      <div class="zone-dot"></div>
+      <div class="zone-body">
+        <div class="zone-top"><div class="zone-name">✅ Normal</div><div class="zone-range">$700 – $1,000</div></div>
+        <div class="zone-action">You're fine. Stick to the schedule.</div>
+      </div>
+    </div>
+    <div class="zone attack" onclick="setZone(this)">
+      <div class="zone-dot"></div>
+      <div class="zone-body">
+        <div class="zone-top"><div class="zone-name">🔥 Attack</div><div class="zone-range">Over $1,000</div></div>
+        <div class="zone-action">Send the excess to Chase first, then BofA.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title">Payday — Do This First</div>
+    <div class="payday-grid">
+      <div class="pd-card">
+        <div class="pd-date">1st</div>
+        <div class="pd-row"><span class="pd-lbl">Taxes → HYSA</span><span class="pd-val">$350–400</span></div>
+        <div class="pd-row"><span class="pd-lbl">IRS set aside</span><span class="pd-val">$874</span></div>
+        <div class="pd-row"><span class="pd-lbl">GCash</span><span class="pd-val">$400–450</span></div>
+        <div class="pd-row"><span class="pd-lbl">Mins: BofA (3rd), Apple (31st)</span><span class="pd-val">✔</span></div>
+        <div class="pd-row"><span class="pd-lbl">Extra → Chase if &gt;$1k left</span><span class="pd-val">→</span></div>
+      </div>
+      <div class="pd-card">
+        <div class="pd-date">15th</div>
+        <div class="pd-row"><span class="pd-lbl">Taxes → HYSA</span><span class="pd-val">$350–400</span></div>
+        <div class="pd-row"><span class="pd-lbl">GCash</span><span class="pd-val">$400–450</span></div>
+        <div class="pd-row"><span class="pd-lbl">Chase min (due 15th)</span><span class="pd-val">✔</span></div>
+        <div class="pd-row"><span class="pd-lbl">Everything else</span><span class="pd-val">→ Chase</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title">Bill Days</div>
+    <div class="card">
+      <div class="card-row"><span style="font-size:15px;font-weight:900;" id="bd0">3rd</span><span style="flex:1;font-size:14px;font-weight:700;margin-left:12px;">BofA</span><span class="lbl" style="font-size:12px;">Minimum</span><div class="bill-check" style="margin-left:10px;" onclick="toggleBill(this,0)"></div></div>
+      <div class="card-row" id="irsRow"><span style="font-size:15px;font-weight:900;" id="bd1">13th</span><span style="flex:1;font-size:14px;font-weight:700;margin-left:12px;">IRS</span><span class="lbl" style="font-size:12px;" id="irsNote">$874</span><div class="bill-check" style="margin-left:10px;" onclick="toggleBill(this,1)"></div></div>
+      <div class="card-row"><span style="font-size:15px;font-weight:900;" id="bd2">15th</span><span style="flex:1;font-size:14px;font-weight:700;margin-left:12px;">Chase Visa</span><span class="lbl" style="font-size:12px;">Minimum + extra</span><div class="bill-check" style="margin-left:10px;" onclick="toggleBill(this,2)"></div></div>
+      <div class="card-row"><span style="font-size:15px;font-weight:900;" id="bd3">31st</span><span style="flex:1;font-size:14px;font-weight:700;margin-left:12px;">Apple</span><span class="lbl" style="font-size:12px;">Minimum</span><div class="bill-check" style="margin-left:10px;" onclick="toggleBill(this,3)"></div></div>
+    </div>
+    <!-- IRS toggle -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding:11px 14px;background:#f9f9f9;border:1.5px solid #e8e8e8;border-radius:10px;">
+      <div>
+        <div style="font-size:13px;font-weight:700;color:#1a1a1a;-webkit-text-fill-color:#1a1a1a;">IRS $874 payments</div>
+        <div style="font-size:11px;color:#aaa;-webkit-text-fill-color:#aaa;margin-top:2px;">Due 13th each month · thru July · <span id="irsSkipLabel">June active</span></div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span style="font-size:11px;color:#aaa;-webkit-text-fill-color:#aaa;" id="irsActiveLabel">Active</span>
+        <div id="irsToggle" onclick="toggleIRS()" style="width:42px;height:24px;border-radius:99px;background:#27ae60;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;">
+          <div id="irsThumb" style="position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title">GCash — Only Spending Money</div>
+    <div class="card">
+      <div class="card-row"><span class="lbl">Weekly budget</span><span class="val">$200 – $225</span></div>
+      <div class="card-row"><span class="lbl">Top-up rule</span><span class="val">No early top-ups</span></div>
+      <div class="card-row"><span class="lbl">Scope</span><span class="val">All discretionary spend</span></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title">Hard Rules</div>
+    <div class="rules-list">
+      <div class="rule">🚫 &nbsp;Never drop checking below $500</div>
+      <div class="rule">🚫 &nbsp;Don't add new charges to Apple Card</div>
+      <div class="rule">🚫 &nbsp;Don't mark investment sales as income</div>
+      <div class="rule">🔒 &nbsp;Taxes are untouchable</div>
+      <div class="rule">🔥 &nbsp;Chase first, then BofA, then Apple</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title">The Loop</div>
+    <div class="loop-card">
+      <div class="loop-steps">
+        <div class="loop-step">Am I safe?</div><span class="loop-arr">→</span>
+        <div class="loop-step">Follow zone</div><span class="loop-arr">→</span>
+        <div class="loop-step">Execute next date</div>
+      </div>
+      <div class="outcomes">
+        <div class="outcome">Won't run out of cash</div>
+        <div class="outcome">Won't add new debt</div>
+        <div class="outcome">Kill Chase fast</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════ CALCULATOR ════════════════ -->
+<div class="page" id="page-calc">
+  <div class="hd-eye">Payday Breakdown</div>
+  <div class="hd-title">Calculator</div>
+  <div style="font-size:13.5px;color:#555;line-height:1.6;margin-bottom:20px;">Enter your income, pick your payday, and get the exact amount to send Chase.</div>
+
+  <div class="sec">
+    <!-- Income source -->
+    <span class="input-label">Income Source</span>
+    <div class="toggle-row" style="margin-bottom:14px;">
+      <div class="toggle-btn active" id="srcH" onclick="setSource('hours')">⏱ Hours</div>
+      <div class="toggle-btn" id="srcD" onclick="setSource('direct')">💵 Direct amount</div>
+    </div>
+
+    <div id="hoursMode">
+      <div class="hrs-row">
+        <button class="hrs-btn" onclick="chgHrs(-1)">−</button>
+        <input class="hrs-disp" type="number" inputmode="decimal" id="hrsInput" value="50" min="1" max="200" oninput="updHrs()">
+        <button class="hrs-btn" onclick="chgHrs(1)">+</button>
+      </div>
+      <div class="sub-note" id="hrsSub">50 hrs × $30 = $1,500</div>
+    </div>
+
+    <div id="directMode" style="display:none;">
+      <div class="field-wrap" style="cursor:pointer;" onclick="openNumpad(document.getElementById('directAmt'),'Total Pay')">
+        <span class="field-prefix">$</span>
+        <input class="field-input" type="text" id="directAmt" placeholder="0" readonly style="cursor:pointer;pointer-events:none;">
+      </div>
+      <div class="sub-note" id="directSub">Enter your total pay</div>
+    </div>
+
+    <!-- Extra income -->
+    <div style="margin-top:14px;" class="card">
+      <div class="extra-hd">
+        <span style="font-size:13px;font-weight:700;color:#1a1a1a;-webkit-text-fill-color:#1a1a1a;">➕ Extra Income</span>
+        <button class="add-btn" onclick="addExtra()">+ Add</button>
+      </div>
+      <div id="extraList"><div class="ei-empty" id="eiEmpty">Side hustle, bonus, referral…</div></div>
+    </div>
+
+    <!-- Checking balance -->
+    <div style="margin-top:14px;">
+      <span class="input-label">Current Checking Balance <span style="font-weight:400;font-size:10px;">optional but recommended</span></span>
+      <div class="field-wrap" style="margin-bottom:4px; cursor:pointer;" onclick="openNumpad(document.getElementById('checkingBal'), 'Checking Balance')">
+        <span class="field-prefix">$</span>
+        <input class="field-input" type="text" id="checkingBal" placeholder="0" readonly style="cursor:pointer; pointer-events:none;">
+      </div>
+      <div class="sub-note" style="text-align:left;margin-top:3px;">Factors into how much is truly safe to send Chase</div>
+    </div>
+
+    <!-- Settings -->
+    <div style="margin-top:14px;">
+      <span class="input-label">Settings</span>
+      <div class="two-col">
+        <div class="mini-card" onclick="openNumpad(document.getElementById('taxRate'), 'Tax Rate %')" style="cursor:pointer;">
+          <span class="mini-label">Tax Rate</span>
+          <div class="mini-field">
+            <input class="mini-input" type="text" id="taxRate" value="25" readonly style="cursor:pointer; pointer-events:none;">
+            <span style="font-size:14px;font-weight:700;color:#aaa;-webkit-text-fill-color:#aaa;">%</span>
+          </div>
+        </div>
+        <div class="mini-card" onclick="openNumpad(document.getElementById('gcashAmt'), 'GCash Top-up')" style="cursor:pointer;">
+          <span class="mini-label">GCash Top-up</span>
+          <div class="mini-field">
+            <span style="font-size:14px;font-weight:700;color:#aaa;-webkit-text-fill-color:#aaa;">$</span>
+            <input class="mini-input" type="text" id="gcashAmt" value="425" readonly style="cursor:pointer; pointer-events:none;">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payday -->
+    <div style="margin-top:14px;">
+      <span class="input-label">Which Payday?</span>
+      <div class="toggle-row" style="margin-bottom:16px;">
+        <div class="toggle-btn active" id="pd1st" onclick="selPayday('1st')">1st — Full deductions</div>
+        <div class="toggle-btn" id="pd15th" onclick="selPayday('15th')">15th — Lighter</div>
+      </div>
+    </div>
+
+    <!-- Minimums -->
+    <div class="mins-section" id="minsSection">
+      <!-- IRS toggle in calc -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:#f9f9f9;border:1.5px solid #e8e8e8;border-radius:10px;margin-bottom:10px;">
+        <div>
+          <div style="font-size:13px;font-weight:700;color:#1a1a1a;-webkit-text-fill-color:#1a1a1a;">IRS $874 due 13th</div>
+          <div style="font-size:11px;color:#aaa;-webkit-text-fill-color:#aaa;margin-top:2px;" id="irsCalcStatus">Active this month</div>
+        </div>
+        <div id="irsCalcToggle" onclick="toggleIRS()" style="width:42px;height:24px;border-radius:99px;background:#27ae60;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;">
+          <div id="irsCalcThumb" style="position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s;"></div>
+        </div>
+      </div>
+      <span class="input-label">Card Minimums Due <span style="font-weight:400;font-size:10px;">(check Cards tab to estimate)</span></span>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px;">
+        <div class="mini-card" onclick="openNumpad(document.getElementById('chaseMin'),'Chase Minimum')" style="cursor:pointer;">
+          <span class="mini-label">Chase</span>
+          <div class="mini-field">
+            <span style="font-size:13px;color:#aaa;-webkit-text-fill-color:#aaa;">$</span>
+            <input class="mini-input" type="text" id="chaseMin" placeholder="0" readonly style="font-size:18px;cursor:pointer;pointer-events:none;">
+          </div>
+          <div class="hint">Due ~15th</div>
+        </div>
+        <div class="mini-card" onclick="openNumpad(document.getElementById('appleMin'),'Apple Minimum')" style="cursor:pointer;">
+          <span class="mini-label">Apple</span>
+          <div class="mini-field">
+            <span style="font-size:13px;color:#aaa;-webkit-text-fill-color:#aaa;">$</span>
+            <input class="mini-input" type="text" id="appleMin" placeholder="0" readonly style="font-size:18px;cursor:pointer;pointer-events:none;">
+          </div>
+          <div class="hint">Due ~31st</div>
+        </div>
+        <div class="mini-card" onclick="openNumpad(document.getElementById('bofaMin'),'BofA Minimum')" style="cursor:pointer;">
+          <span class="mini-label">BofA</span>
+          <div class="mini-field">
+            <span style="font-size:13px;color:#aaa;-webkit-text-fill-color:#aaa;">$</span>
+            <input class="mini-input" type="text" id="bofaMin" placeholder="0" readonly style="font-size:18px;cursor:pointer;pointer-events:none;">
+          </div>
+          <div class="hint">Due ~3rd</div>
+        </div>
+          </div>
+          <div class="hint">Due ~3rd</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="calculate()">Calculate My Payday →</button>
+  </div>
+
+  <!-- Results -->
+  <div id="results" style="display:none;">
+    <div class="gross-banner">
+      <div class="gb-lbl">Total Gross Pay</div>
+      <div class="gb-amt" id="gbAmt"></div>
+      <div class="gb-sub" id="gbSub"></div>
+    </div>
+
+    <div class="card" style="margin-bottom:12px;">
+      <div class="card-hd">Deductions</div>
+      <div class="card-row"><span class="lbl">Taxes → HYSA</span><span class="val red" id="rTax"></span></div>
+      <div class="card-row" id="rIrsRow"><span class="lbl">IRS Set Aside</span><span class="val red">−$874</span></div>
+      <div class="card-row"><span class="lbl">GCash</span><span class="val red" id="rGcash"></span></div>
+      <div class="card-row" id="rChaseMinRow"><span class="lbl">Chase Minimum</span><span class="val red" id="rChaseMin"></span></div>
+      <div class="card-row" id="rBofaRow"><span class="lbl">BofA Minimum</span><span class="val red" id="rBofa"></span></div>
+      <div class="card-row" id="rAppleRow"><span class="lbl">Apple Minimum</span><span class="val red" id="rApple"></span></div>
+      <div class="card-row"><span class="lbl">Safety buffer (stays in checking)</span><span class="val red">−$700</span></div>
+      <div class="card-row" style="background:#f9f9f9 !important;"><span class="lbl bold">Total accounted for</span><span class="val red" id="rTotal"></span></div>
+    </div>
+
+    <!-- Checking context -->
+    <div class="card" id="checkingCtxCard" style="margin-bottom:12px;display:none;">
+      <div class="card-hd">Checking Account Context</div>
+      <div class="card-row"><span class="lbl">Current balance</span><span class="val" id="rCheckingBal"></span></div>
+      <div class="card-row"><span class="lbl">After this payday's deductions</span><span class="val" id="rCheckingAfter"></span></div>
+      <div class="card-row" style="background:#f9f9f9 !important;"><span class="lbl bold">Safe to send Chase</span><span class="val blue" id="rCheckingSafe"></span></div>
+    </div>
+
+    <div class="pills-row">
+      <div class="pill"><div class="pill-lbl">Gross</div><div class="pill-val" id="pGross"></div></div>
+      <div class="pill"><div class="pill-lbl">Accounted</div><div class="pill-val red" id="pAccounted"></div></div>
+      <div class="pill"><div class="pill-lbl">→ Chase</div><div class="pill-val blue" id="pChase"></div></div>
+    </div>
+
+    <div class="proof" id="rProof"></div>
+
+    <div class="chase-box" id="chaseBox">
+      <div class="cb-lbl">🔥 Send to Chase</div>
+      <div class="cb-amt" id="cbAmt"></div>
+      <div class="cb-sub">Every dollar is accounted for above</div>
+    </div>
+    <div class="warn-box" id="warnBox" style="display:none;">⚠️ Tight period — cover essentials only. Nothing extra to Chase.</div>
+    <button class="btn-primary" id="logBtn" onclick="logFromCalc()" style="display:none;">Log this payment to Chase Tracker →</button>
+  </div>
+</div>
+
+
+<!-- ════════════════ CARDS ════════════════ -->
+<div class="page" id="page-cards">
+  <div class="hd-eye">Minimum Estimator</div>
+  <div class="hd-title">Your Cards</div>
+  <div style="font-size:13.5px;color:#555;line-height:1.6;margin-bottom:20px;">Enter each card's current balance to estimate your minimums before your statement closes.</div>
+
+  <!-- Priority overview -->
+  <div class="sec">
+    <div class="sec-title">Payoff Priority</div>
+    <div class="card-priority">
+      <div class="cp-badge p1">1</div>
+      <div class="cp-body"><div class="cp-name">🟦 Chase Prime Visa</div><div class="cp-apr">25.99% APR — Kill this first</div></div>
+      <div class="cp-est"><div class="cp-est-val" id="chaseEstMin">—</div><div class="cp-est-lbl">est. min</div></div>
+    </div>
+    <div class="card-priority">
+      <div class="cp-badge p2">2</div>
+      <div class="cp-body"><div class="cp-name">🟥 Bank of America</div><div class="cp-apr">24.74% APR — Second priority</div></div>
+      <div class="cp-est"><div class="cp-est-val" id="bofaEstMin">—</div><div class="cp-est-lbl">est. min</div></div>
+    </div>
+    <div class="card-priority">
+      <div class="cp-badge p3">3</div>
+      <div class="cp-body"><div class="cp-name">🍎 Apple Card</div><div class="cp-apr">19.74% APR — Lowest priority</div></div>
+      <div class="cp-est"><div class="cp-est-val" id="appleEstMin">—</div><div class="cp-est-lbl">est. min</div></div>
+    </div>
+  </div>
+
+  <!-- Estimator cards -->
+  <div class="sec">
+    <div class="sec-title">Enter Your Balance to Estimate</div>
+
+    <!-- Chase -->
+    <div class="estimator-card" style="margin-bottom:12px;">
+      <div class="est-card-hd">
+        <span class="est-card-name">🟦 Chase Prime Visa</span>
+        <span class="est-card-apr">25.99% APR</span>
+      </div>
+      <div class="est-body">
+        <div class="est-row">
+          <span class="est-lbl">Current balance</span>
+          <div style="display:flex;align-items:center;gap:4px;">
+            <span style="font-size:14px;color:#aaa;-webkit-text-fill-color:#aaa;">$</span>
+            <input class="bal-input-sm" type="text" id="chaseBal" placeholder="0" readonly onclick="openNumpad(this,'Chase Balance',()=>{saveCardBals();calcMins();})" style="width:110px;text-align:right;cursor:pointer;">
+          </div>
+        </div>
+        <div class="est-row"><span class="est-lbl">Monthly interest</span><span class="est-val orange" id="chaseInt">—</span></div>
+        <div class="est-row"><span class="est-lbl">1% of balance</span><span class="est-val" id="chaseOnePct">—</span></div>
+        <div class="est-row"><span class="est-lbl" style="font-weight:700;color:#1a1a1a;-webkit-text-fill-color:#1a1a1a;">Estimated minimum</span><span class="est-val red" id="chaseMinEst">—</span></div>
+      </div>
+    </div>
+
+    <!-- BofA -->
+    <div class="estimator-card" style="margin-bottom:12px;">
+      <div class="est-card-hd">
+        <span class="est-card-name">🟥 Bank of America</span>
+        <span class="est-card-apr">24.74% APR</span>
+      </div>
+      <div class="est-body">
+        <div class="est-row">
+          <span class="est-lbl">Current balance</span>
+          <div style="display:flex;align-items:center;gap:4px;">
+            <span style="font-size:14px;color:#aaa;-webkit-text-fill-color:#aaa;">$</span>
+            <input class="bal-input-sm" type="text" id="bofaBal" placeholder="0" readonly onclick="openNumpad(this,'BofA Balance',()=>{saveCardBals();calcMins();})" style="width:110px;text-align:right;cursor:pointer;">
+          </div>
+        </div>
+        <div class="est-row"><span class="est-lbl">Monthly interest</span><span class="est-val orange" id="bofaInt">—</span></div>
+        <div class="est-row"><span class="est-lbl">1% of balance</span><span class="est-val" id="bofaOnePct">—</span></div>
+        <div class="est-row"><span class="est-lbl" style="font-weight:700;color:#1a1a1a;-webkit-text-fill-color:#1a1a1a;">Estimated minimum</span><span class="est-val red" id="bofaMinEst">—</span></div>
+      </div>
+    </div>
+
+    <!-- Apple -->
+    <div class="estimator-card" style="margin-bottom:12px;">
+      <div class="est-card-hd">
+        <span class="est-card-name">🍎 Apple Card</span>
+        <span class="est-card-apr">19.74% APR</span>
+      </div>
+      <div class="est-body">
+        <div class="est-row">
+          <span class="est-lbl">Current balance</span>
+          <div style="display:flex;align-items:center;gap:4px;">
+            <span style="font-size:14px;color:#aaa;-webkit-text-fill-color:#aaa;">$</span>
+            <input class="bal-input-sm" type="text" id="appleBal" placeholder="0" readonly onclick="openNumpad(this,'Apple Balance',()=>{saveCardBals();calcMins();})" style="width:110px;text-align:right;cursor:pointer;">
+          </div>
+        </div>
+        <div class="est-row"><span class="est-lbl">Monthly interest</span><span class="est-val orange" id="appleInt">—</span></div>
+        <div class="est-row"><span class="est-lbl">1% of balance</span><span class="est-val" id="appleOnePct">—</span></div>
+        <div class="est-row"><span class="est-lbl" style="font-weight:700;color:#1a1a1a;-webkit-text-fill-color:#1a1a1a;">Estimated minimum</span><span class="est-val red" id="appleMinEst">—</span></div>
+      </div>
+    </div>
+
+    <div style="background:#f9f9f9;border:1.5px solid #e8e8e8;border-radius:10px;padding:13px 15px;font-size:12px;color:#777;-webkit-text-fill-color:#777;line-height:1.7;">
+      💡 Formula: <b>1% of balance + monthly interest</b>, floored at $35 for Chase and BofA. These are estimates — your actual statement may vary slightly. Check your app before payday.
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════ TRACKER ════════════════ -->
+<div class="page" id="page-tracker">
+  <div class="hd-eye">Payoff Progress</div>
+  <div class="hd-title">Chase Tracker</div>
+  <div style="font-size:13.5px;color:#555;line-height:1.6;margin-bottom:20px;">Set your starting balance once. Log payments from the calculator or manually here — balance updates automatically.</div>
+
+  <!-- Set balance (first time only) -->
+  <div id="setBalCard" class="card" style="padding:16px;margin-bottom:16px;">
+    <span class="input-label">Starting Chase Balance</span>
+    <div class="field-wrap" style="margin-bottom:12px; cursor:pointer;" onclick="openNumpad(document.getElementById('startBal'),'Starting Balance')">
+      <span class="field-prefix">$</span>
+      <input class="field-input" type="text" id="startBal" placeholder="0" readonly style="cursor:pointer;pointer-events:none;">
+    </div>
+    <button class="btn-primary" onclick="setStartBal()">Set Balance →</button>
+  </div>
+
+  <div id="trackerMain" style="display:none;">
+    <!-- Balance + manual log -->
+    <div class="card" style="padding:15px;margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+        <span class="input-label" style="margin-bottom:0;">Current Balance</span>
+        <button class="clear-btn" onclick="resetTracker()">Reset</button>
+      </div>
+      <div class="tracker-bal-display" id="balDisplay">$0</div>
+      <span class="input-label">Log a Payment</span>
+      <div class="log-row">
+        <div class="log-field" onclick="openNumpad(document.getElementById('manualAmt'),'Payment Amount')" style="cursor:pointer;">
+          <span class="log-sym">$</span>
+          <input class="log-input" type="text" id="manualAmt" placeholder="Amount" readonly style="cursor:pointer;pointer-events:none;">
+        </div>
+        <button class="log-btn" onclick="logManual()">Log →</button>
+      </div>
+    </div>
+
+    <!-- Payoff estimate -->
+    <div class="payoff-box">
+      <div class="pb-lbl">Estimated Payoff</div>
+      <div class="pb-val" id="pbVal">—</div>
+      <div class="pb-unit" id="pbUnit">months</div>
+      <div class="pb-sub" id="pbSub">Log payments to get an accurate estimate</div>
+    </div>
+
+    <!-- Progress -->
+    <div class="prog-wrap">
+      <div class="prog-top">
+        <span id="progPaid">$0 paid</span>
+        <span id="progBal">$0 remaining</span>
+      </div>
+      <div class="prog-bg"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stat-card" id="statsCard" style="display:none;">
+      <div class="stat-row"><span class="stat-lbl">Payments logged</span><span class="stat-val" id="stCount">0</span></div>
+      <div class="stat-row"><span class="stat-lbl">Total sent to Chase</span><span class="stat-val" id="stTotal">$0</span></div>
+      <div class="stat-row"><span class="stat-lbl">Avg per payment</span><span class="stat-val" id="stAvg">$0</span></div>
+    </div>
+
+    <!-- History -->
+    <div class="sec" style="margin-top:4px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;">
+        <div class="sec-title" style="margin-bottom:0;">Payment History</div>
+        <button class="clear-btn" onclick="clearHist()">Clear all</button>
+      </div>
+      <div class="card" id="histList"><div class="hist-empty">No payments logged yet.</div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- CUSTOM NUMPAD -->
+<div class="numpad-overlay" id="numpad">
+  <div class="numpad-display">
+    <span class="numpad-label" id="numpadLabel">Amount</span>
+    <span class="numpad-value" id="numpadValue">0</span>
+  </div>
+  <div class="numpad-grid">
+    <button class="np-btn" onclick="npPress('1')">1</button>
+    <button class="np-btn" onclick="npPress('2')">2</button>
+    <button class="np-btn" onclick="npPress('3')">3</button>
+    <button class="np-btn" onclick="npPress('4')">4</button>
+    <button class="np-btn" onclick="npPress('5')">5</button>
+    <button class="np-btn" onclick="npPress('6')">6</button>
+    <button class="np-btn" onclick="npPress('7')">7</button>
+    <button class="np-btn" onclick="npPress('8')">8</button>
+    <button class="np-btn" onclick="npPress('9')">9</button>
+    <button class="np-btn dark" onclick="npPress('.')">.</button>
+    <button class="np-btn" onclick="npPress('0')">0</button>
+    <button class="np-btn dark" onclick="npPress('del')">⌫</button>
+    <button class="np-btn done-btn" onclick="npDone()" style="grid-column: span 3;">Done</button>
+  </div>
+</div>
+
+<script>
+const now = new Date();
+document.getElementById('dateDisplay').textContent =
+  now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+
+// Highlight bill days due within 3 days
+const billDueDays = [3,13,15,31];
+billDueDays.forEach((d,i)=>{
+  const diff = d >= now.getDate() ? d - now.getDate() : 31 - now.getDate() + d;
+  if(diff <= 3){ const el=document.getElementById('bd'+i); if(el){el.style.color='#e74c3c'; el.style.webkitTextFillColor='#e74c3c';} }
+});
+
+// ── TABS ──
+function switchTab(t){
+  ['system','calc','cards','tracker'].forEach(id=>{
+    document.getElementById('page-'+id).classList.toggle('active', id===t);
+  });
+  document.querySelectorAll('.tab').forEach((el,i)=>{
+    el.classList.toggle('active',['system','calc','cards','tracker'][i]===t);
+  });
+  if(t==='tracker') renderTracker();
+  if(t!=='calc') document.getElementById('results').style.display='none';
+  closeNumpad();
+}
+
+// ── ZONES ──
+function setZone(el){
+  document.querySelectorAll('.zone').forEach(z=>z.classList.remove('active'));
+  el.classList.toggle('active');
+}
+
+// ── BILLS ──
+const BKEY='bills_'+now.getFullYear()+'_'+now.getMonth();
+function loadBills(){
+  try{
+    const s=JSON.parse(localStorage.getItem(BKEY)||'[]');
+    document.querySelectorAll('.bill-check').forEach((el,i)=>{
+      if(s[i]){el.classList.add('done');el.textContent='✓';}
+    });
+  }catch(e){}
+}
+function toggleBill(el,i){
+  el.classList.toggle('done');
+  el.textContent=el.classList.contains('done')?'✓':'';
+  try{
+    const s=JSON.parse(localStorage.getItem(BKEY)||'[]');
+    s[i]=el.classList.contains('done');
+    localStorage.setItem(BKEY,JSON.stringify(s));
+  }catch(e){}
+}
+loadBills();
+
+// ── IRS TOGGLE ──
+function getIRS(){try{return localStorage.getItem('irs_active')!=='0';}catch(e){return true;}}
+function toggleIRS(){
+  const active=!getIRS();
+  try{localStorage.setItem('irs_active',active?'1':'0');}catch(e){}
+  updateIRSUI();
+}
+function updateIRSUI(){
+  const active=getIRS();
+  const month=now.toLocaleString('en-US',{month:'long'});
+  // System tab toggle
+  const tog=document.getElementById('irsToggle');
+  const thumb=document.getElementById('irsThumb');
+  const lbl=document.getElementById('irsActiveLabel');
+  const skipLbl=document.getElementById('irsSkipLabel');
+  if(tog){tog.style.background=active?'#27ae60':'#ddd';}
+  if(thumb){thumb.style.left=active?'21px':'3px';}
+  if(lbl){lbl.textContent=active?'Active':'Skipped'; lbl.style.color=active?'#27ae60':'#e74c3c'; lbl.style.webkitTextFillColor=active?'#27ae60':'#e74c3c';}
+  if(skipLbl){skipLbl.textContent=active?'June may be skipped':'Skipped for '+month;}
+  // IRS bill row
+  const irsRow=document.getElementById('irsRow');
+  if(irsRow){irsRow.style.opacity=active?'1':'0.4';}
+  // Calc tab toggle
+  const ctog=document.getElementById('irsCalcToggle');
+  const cthumb=document.getElementById('irsCalcThumb');
+  const cstatus=document.getElementById('irsCalcStatus');
+  if(ctog){ctog.style.background=active?'#27ae60':'#ddd';}
+  if(cthumb){cthumb.style.left=active?'21px':'3px';}
+  if(cstatus){cstatus.textContent=active?'Active this month — included in calc':'Skipped — not included in calc'; cstatus.style.color=active?'#aaa':'#e74c3c'; cstatus.style.webkitTextFillColor=active?'#aaa':'#e74c3c';}
+}
+
+// ── CALC ──
+let incSrc='hours', payday='1st', extraCtr=0, extraIds=[], lastChaseAmt=0;
+
+function setSource(s){
+  incSrc=s;
+  document.getElementById('srcH').classList.toggle('active',s==='hours');
+  document.getElementById('srcD').classList.toggle('active',s==='direct');
+  document.getElementById('hoursMode').style.display=s==='hours'?'block':'none';
+  document.getElementById('directMode').style.display=s==='direct'?'block':'none';
+}
+function chgHrs(d){
+  const el=document.getElementById('hrsInput');
+  el.value=Math.max(1,Math.min(200,(parseInt(el.value)||50)+d));
+  updHrs();
+}
+function updHrs(){
+  const h=parseInt(document.getElementById('hrsInput').value)||0;
+  document.getElementById('hrsSub').textContent=h+' hrs × $30 = $'+(h*30).toLocaleString();
+}
+function updDirect(){
+  const v=parseFloat(document.getElementById('directAmt').value)||0;
+  document.getElementById('directSub').textContent=v>0?'Total pay: $'+v.toLocaleString():'Enter your total pay';
+}
+function selPayday(p){
+  payday=p;
+  document.getElementById('pd1st').classList.toggle('active',p==='1st');
+  document.getElementById('pd15th').classList.toggle('active',p==='15th');
+  document.getElementById('minsSection').classList.toggle('dimmed',p==='15th');
+}
+function addExtra(){
+  extraCtr++;
+  const id='ex'+extraCtr;
+  extraIds.push(id);
+  document.getElementById('eiEmpty').style.display='none';
+  const row=document.createElement('div');
+  row.className='ei-row'; row.id='row_'+id;
+  row.innerHTML=`<input class="ei-lbl" type="text" id="lbl_${id}" placeholder="e.g. Side hustle, Bonus…"><span class="ei-sym">$</span><input class="ei-amt" type="number" inputmode="decimal" id="amt_${id}" placeholder="0" min="0"><button class="ei-rm" onclick="rmExtra('${id}')">×</button>`;
+  document.getElementById('extraList').appendChild(row);
+}
+function rmExtra(id){
+  extraIds=extraIds.filter(x=>x!==id);
+  const r=document.getElementById('row_'+id); if(r) r.remove();
+  if(extraIds.length===0) document.getElementById('eiEmpty').style.display='block';
+}
+function fmt(n){return '$'+Math.round(n).toLocaleString();}
+
+function calculate(){
+  const is1st=payday==='1st';
+  const taxRate=(parseFloat(document.getElementById('taxRate').value)||25)/100;
+  const gcash=parseFloat(document.getElementById('gcashAmt').value)||425;
+  const irsActive=getIRS();
+  const checkingBal=parseFloat(document.getElementById('checkingBal').value)||0;
+
+  let base=0,sub='';
+  if(incSrc==='hours'){
+    const h=parseInt(document.getElementById('hrsInput').value)||0;
+    base=h*30; sub=h+' hrs × $30/hr';
+  } else {
+    base=parseFloat(document.getElementById('directAmt').value)||0; sub='Direct income';
+  }
+  let extraTotal=0,extraLines=[];
+  extraIds.forEach(id=>{
+    const lbl=document.getElementById('lbl_'+id)?.value||'Extra';
+    const amt=parseFloat(document.getElementById('amt_'+id)?.value)||0;
+    if(amt>0){extraTotal+=amt;extraLines.push({lbl,amt});}
+  });
+  const gross=base+extraTotal;
+  if(extraTotal>0) sub+=extraLines.map(e=>'\n+ '+fmt(e.amt)+' ('+e.lbl+')').join('');
+
+  const taxes=Math.round(gross*taxRate);
+  const irs=(is1st&&irsActive)?874:0;
+  const chaseMin=is1st?(parseFloat(document.getElementById('chaseMin').value)||0):0;
+  const bofaMin=is1st?(parseFloat(document.getElementById('bofaMin').value)||0):0;
+  const appleMin=is1st?(parseFloat(document.getElementById('appleMin').value)||0):0;
+  const buffer=700;
+  const totalDed=taxes+irs+gcash+chaseMin+bofaMin+appleMin+buffer;
+
+  // If checking balance provided, factor it in
+  // Total available = gross + existing checking (minus what was already there as buffer)
+  // Safe to send = (gross + checking) - all deductions - buffer
+  let chaseExtra, checkingAfter, checkingSafe;
+  if(checkingBal>0){
+    const totalAvailable=gross+checkingBal;
+    chaseExtra=Math.max(0,totalAvailable-totalDed);
+    checkingAfter=checkingBal+(gross-taxes-irs-gcash-chaseMin-bofaMin-appleMin);
+    checkingSafe=Math.max(0,checkingAfter-buffer);
+  } else {
+    chaseExtra=Math.max(0,gross-totalDed);
+    checkingAfter=null; checkingSafe=null;
+  }
+  lastChaseAmt=chaseExtra;
+
+  document.getElementById('gbAmt').textContent=fmt(gross);
+  document.getElementById('gbSub').textContent=sub;
+  document.getElementById('rTax').textContent='−'+fmt(taxes)+' ('+Math.round(taxRate*100)+'%)';
+  document.getElementById('rGcash').textContent='−'+fmt(gcash);
+  document.getElementById('rIrsRow').style.display=(is1st&&irsActive)?'flex':'none';
+
+  if(is1st){
+    document.getElementById('rChaseMinRow').style.display='flex';
+    document.getElementById('rChaseMin').textContent='−'+fmt(chaseMin);
+    document.getElementById('rBofaRow').style.display='flex';
+    document.getElementById('rBofa').textContent='−'+fmt(bofaMin);
+    document.getElementById('rAppleRow').style.display='flex';
+    document.getElementById('rApple').textContent='−'+fmt(appleMin);
+  } else {
+    ['rChaseMinRow','rBofaRow','rAppleRow'].forEach(id=>document.getElementById(id).style.display='none');
+  }
+
+  document.getElementById('rTotal').textContent='−'+fmt(totalDed);
+  document.getElementById('pGross').textContent=fmt(gross);
+  document.getElementById('pAccounted').textContent='−'+fmt(totalDed);
+  document.getElementById('pChase').textContent=chaseExtra>0?fmt(chaseExtra):'$0';
+  document.getElementById('rProof').textContent=fmt(gross)+(checkingBal>0?' + '+fmt(checkingBal)+' checking':'')+' = '+fmt(taxes)+' taxes'+(is1st&&irsActive?' + $874 IRS':'')+' + '+fmt(gcash)+' GCash'+(is1st&&chaseMin>0?' + '+fmt(chaseMin)+' Chase min':'')+(is1st&&bofaMin>0?' + '+fmt(bofaMin)+' BofA':'')+(is1st&&appleMin>0?' + '+fmt(appleMin)+' Apple':'')+' + $700 buffer'+(chaseExtra>0?' + '+fmt(chaseExtra)+' → Chase':'');
+
+  // Checking context block
+  const ctxCard=document.getElementById('checkingCtxCard');
+  if(checkingBal>0){
+    ctxCard.style.display='block';
+    document.getElementById('rCheckingBal').textContent=fmt(checkingBal);
+    document.getElementById('rCheckingAfter').textContent=fmt(checkingAfter);
+    const safeEl=document.getElementById('rCheckingSafe');
+    safeEl.textContent=fmt(checkingSafe);
+    safeEl.className='val '+(checkingSafe>=chaseExtra?'blue':'orange');
+  } else {
+    ctxCard.style.display='none';
+  }
+
+  const cb=document.getElementById('chaseBox'), wb=document.getElementById('warnBox'), lb=document.getElementById('logBtn');
+  if(chaseExtra>0){
+    document.getElementById('cbAmt').textContent=fmt(chaseExtra);
+    cb.style.display='block'; wb.style.display='none'; lb.style.display='block';
+  } else {
+    cb.style.display='none'; wb.style.display='block'; lb.style.display='none';
+  }
+  document.getElementById('results').style.display='block';
+  document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ── CARDS / MIN ESTIMATOR ──
+function saveCardBals(){
+  try{
+    localStorage.setItem('cb_chase', document.getElementById('chaseBal').value);
+    localStorage.setItem('cb_bofa', document.getElementById('bofaBal').value);
+    localStorage.setItem('cb_apple', document.getElementById('appleBal').value);
+  }catch(e){}
+}
+function loadCardBals(){
+  try{
+    const c=localStorage.getItem('cb_chase');
+    const b=localStorage.getItem('cb_bofa');
+    const a=localStorage.getItem('cb_apple');
+    if(c){document.getElementById('chaseBal').value=c;}
+    if(b){document.getElementById('bofaBal').value=b;}
+    if(a){document.getElementById('appleBal').value=a;}
+    if(c||b||a) calcMins();
+  }catch(e){}
+}
+function calcMins(){
+  const cards=[
+    {balId:'chaseBal',apr:25.99,intId:'chaseInt',pctId:'chaseOnePct',minId:'chaseMinEst',ovId:'chaseEstMin',floor:35},
+    {balId:'bofaBal',apr:24.74,intId:'bofaInt',pctId:'bofaOnePct',minId:'bofaMinEst',ovId:'bofaEstMin',floor:35},
+    {balId:'appleBal',apr:19.74,intId:'appleInt',pctId:'appleOnePct',minId:'appleMinEst',ovId:'appleEstMin',floor:25},
+  ];
+  cards.forEach(c=>{
+    const bal=parseFloat(document.getElementById(c.balId).value)||0;
+    if(bal<=0){
+      [c.intId,c.pctId,c.minId,c.ovId].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent='—'; });
+      return;
+    }
+    const monthlyRate=c.apr/100/12;
+    const interest=Math.round(bal*monthlyRate);
+    const onePct=Math.round(bal*0.01);
+    const est=Math.max(c.floor, onePct+interest);
+    document.getElementById(c.intId).textContent='$'+interest;
+    document.getElementById(c.pctId).textContent='$'+onePct;
+    document.getElementById(c.minId).textContent='$'+est;
+    document.getElementById(c.ovId).textContent='$'+est;
+  });
+}
+
+// ── TRACKER ──
+function getbal(){try{return parseFloat(localStorage.getItem('tb')||'0')||0;}catch(e){return 0;}}
+function setbal(v){try{localStorage.setItem('tb',v);}catch(e){}}
+function getHist(){try{return JSON.parse(localStorage.getItem('th')||'[]');}catch(e){return[];}}
+function setHist(h){try{localStorage.setItem('th',JSON.stringify(h));}catch(e){}}
+function isStarted(){try{return localStorage.getItem('ts')==='1';}catch(e){return false;}}
+
+function setStartBal(){
+  const v=parseFloat(document.getElementById('startBal').value)||0;
+  if(v<=0){alert('Enter a balance greater than $0.');return;}
+  setbal(v);
+  try{localStorage.setItem('ts','1');}catch(e){}
+  renderTracker();
+}
+function resetTracker(){
+  if(!confirm('Reset Chase tracker and clear all history?'))return;
+  try{localStorage.removeItem('tb');localStorage.removeItem('th');localStorage.removeItem('ts');}catch(e){}
+  renderTracker();
+}
+function doLogPayment(amt,src){
+  if(amt<=0)return;
+  const newBal=Math.max(0,getbal()-amt);
+  setbal(newBal);
+  const h=getHist();
+  h.unshift({date:now.toLocaleDateString('en-US',{month:'short',day:'numeric'}),amount:amt,src:src||'Manual'});
+  setHist(h);
+  renderTracker();
+}
+function logManual(){
+  const amt=parseFloat(document.getElementById('manualAmt').value)||0;
+  if(amt<=0){alert('Enter an amount to log.');return;}
+  doLogPayment(amt,'Manual');
+  document.getElementById('manualAmt').value='';
+}
+function logFromCalc(){
+  if(lastChaseAmt<=0)return;
+  if(!isStarted()){alert('Go to the Chase tab first and set your starting balance.');switchTab('tracker');return;}
+  doLogPayment(lastChaseAmt,'From calculator');
+  switchTab('tracker');
+}
+function delPayment(i){
+  const h=getHist();
+  if(!h[i])return;
+  setbal(getbal()+h[i].amount);
+  h.splice(i,1);
+  setHist(h);
+  renderTracker();
+}
+function clearHist(){
+  if(!confirm('Clear all payment history? Balance will not change.'))return;
+  try{localStorage.removeItem('th');}catch(e){}
+  renderTracker();
+}
+
+function renderTracker(){
+  const started=isStarted();
+  document.getElementById('setBalCard').style.display=started?'none':'block';
+  document.getElementById('trackerMain').style.display=started?'block':'none';
+  if(!started)return;
+
+  const bal=getbal();
+  const hist=getHist();
+  document.getElementById('balDisplay').textContent=fmt(bal);
+
+  const totalPaid=hist.reduce((s,h)=>s+h.amount,0);
+  const avg=hist.length>0?totalPaid/hist.length:0;
+  const periodsLeft=avg>0?Math.ceil(bal/avg):null;
+  const months=periodsLeft!==null?Math.ceil(periodsLeft/2):null;
+
+  document.getElementById('pbVal').textContent=months!==null?months:'—';
+  document.getElementById('pbUnit').textContent=months===1?'month':'months';
+  document.getElementById('pbSub').textContent=hist.length>0
+    ?'Based on avg payment of '+fmt(avg)+' per pay period'
+    :'Log payments to get an accurate estimate';
+
+  const orig=bal+totalPaid;
+  const pct=orig>0?Math.min(100,Math.round(totalPaid/orig*100)):0;
+  document.getElementById('progPaid').textContent=fmt(totalPaid)+' paid ('+pct+'%)';
+  document.getElementById('progBal').textContent=fmt(bal)+' remaining';
+  document.getElementById('progFill').style.width=pct+'%';
+
+  const sc=document.getElementById('statsCard');
+  if(hist.length>0){
+    sc.style.display='block';
+    document.getElementById('stCount').textContent=hist.length;
+    document.getElementById('stTotal').textContent=fmt(totalPaid);
+    document.getElementById('stAvg').textContent=fmt(avg);
+  } else { sc.style.display='none'; }
+
+  const hl=document.getElementById('histList');
+  hl.innerHTML=hist.length===0
+    ?'<div class="hist-empty">No payments logged yet.</div>'
+    :hist.map((h,i)=>`<div class="hist-row"><span class="hist-date">${h.date}</span><span class="hist-amt">${fmt(h.amount)}</span><span class="hist-src">${h.src||''}</span><button class="hist-del" onclick="delPayment(${i})">✕</button></div>`).join('');
+}
+
+// ── PERSISTENT SETTINGS ──
+function saveSettings(){
+  try{
+    localStorage.setItem('cfg_tax', document.getElementById('taxRate').value);
+    localStorage.setItem('cfg_gcash', document.getElementById('gcashAmt').value);
+  }catch(e){}
+}
+function loadSettings(){
+  try{
+    const tax=localStorage.getItem('cfg_tax');
+    const gcash=localStorage.getItem('cfg_gcash');
+    if(tax) document.getElementById('taxRate').value=tax;
+    if(gcash) document.getElementById('gcashAmt').value=gcash;
+  }catch(e){}
+}
+document.getElementById('taxRate').addEventListener('change', saveSettings);
+document.getElementById('gcashAmt').addEventListener('change', saveSettings);
+
+// ── CUSTOM NUMPAD ──
+let npTarget=null, npStr='', npOnDone=null;
+function openNumpad(el, label, onDone){
+  npTarget=el; npStr=el.value||''; npOnDone=onDone||null;
+  document.getElementById('numpadLabel').textContent=label||'Amount';
+  document.getElementById('numpadValue').textContent=npStr||'0';
+  document.getElementById('numpad').classList.add('open');
+  document.body.style.paddingBottom='300px';
+  setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'center'}),100);
+}
+function closeNumpad(){
+  document.getElementById('numpad').classList.remove('open');
+  document.body.style.paddingBottom='';
+  if(npOnDone) npOnDone();
+  npTarget=null;
+}
+function npPress(k){
+  if(k==='del'){ npStr=npStr.slice(0,-1); }
+  else if(k==='.'){ if(!npStr.includes('.')) npStr+='.'; }
+  else { npStr= npStr==='0'?k : npStr+k; }
+  document.getElementById('numpadValue').textContent=npStr||'0';
+  if(npTarget){ npTarget.value=npStr; npTarget.dispatchEvent(new Event('input',{bubbles:true})); }
+}
+function npDone(){ closeNumpad(); }
+function wireNumpad(id, label, onDone){
+  const el=document.getElementById(id); if(!el) return;
+  el.readOnly=true; el.style.cursor='pointer';
+  el.addEventListener('click',()=>openNumpad(el,label,onDone));
+  el.addEventListener('focus',()=>openNumpad(el,label,onDone));
+}
+
+// Init
+loadSettings();
+loadCardBals();
+updHrs();
+updateIRSUI();
+renderTracker();
+</script>
+</body>
+</html>
