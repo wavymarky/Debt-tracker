@@ -329,7 +329,7 @@
     <div id="hoursMode">
       <div class="hrs-row">
         <button class="hrs-btn" onclick="chgHrs(-1)">−</button>
-        <input class="hrs-disp" type="number" inputmode="decimal" id="hrsInput" value="50" min="1" max="200" oninput="updHrs()">
+        <input class="hrs-disp" type="number" inputmode="decimal" step="0.01" id="hrsInput" value="50" min="1" max="200" oninput="updHrs()">
         <button class="hrs-btn" onclick="chgHrs(1)">+</button>
       </div>
       <div class="sub-note" id="hrsSub">50 hrs × $30 = $1,500</div>
@@ -338,7 +338,7 @@
     <div id="directMode" style="display:none;">
       <div class="field-wrap" style="cursor:pointer;">
         <span class="field-prefix">$</span>
-        <input class="field-input" type="number" inputmode="decimal" id="directAmt" placeholder="0">
+        <input class="field-input" type="number" inputmode="decimal" step="0.01" id="directAmt" placeholder="0">
       </div>
       <div class="sub-note" id="directSub">Enter your total pay</div>
     </div>
@@ -357,7 +357,7 @@
       <span class="input-label">Current Checking Balance <span style="font-weight:400;font-size:10px;">optional but recommended</span></span>
       <div class="field-wrap" style="margin-bottom:4px;">
         <span class="field-prefix">$</span>
-        <input class="field-input" type="number" inputmode="decimal" id="checkingBal" placeholder="0">
+        <input class="field-input" type="number" inputmode="decimal" step="0.01" id="checkingBal" placeholder="0">
       </div>
       <div class="sub-note" style="text-align:left;margin-top:3px;">Factors into how much is truly safe to send Chase</div>
     </div>
@@ -369,7 +369,7 @@
         <div class="mini-card" style="cursor:pointer;">
           <span class="mini-label">Tax Rate</span>
           <div class="mini-field">
-            <input class="mini-input" type="number" inputmode="decimal" id="taxRate" value="25" min="1" max="50">
+            <input class="mini-input" type="number" inputmode="decimal" step="0.01" id="taxRate" value="25" min="1" max="50">
             <span style="font-size:14px;font-weight:700;color:#aaa;-webkit-text-fill-color:#aaa;">%</span>
           </div>
         </div>
@@ -377,7 +377,7 @@
           <span class="mini-label">GCash Top-up</span>
           <div class="mini-field">
             <span style="font-size:14px;font-weight:700;color:#aaa;-webkit-text-fill-color:#aaa;">$</span>
-            <input class="mini-input" type="number" inputmode="decimal" id="gcashAmt" value="425" min="0">
+            <input class="mini-input" type="number" inputmode="decimal" step="0.01" id="gcashAmt" value="425" min="0">
           </div>
         </div>
       </div>
@@ -410,7 +410,7 @@
           <span class="mini-label">Chase</span>
           <div class="mini-field">
             <span style="font-size:13px;color:#aaa;-webkit-text-fill-color:#aaa;">$</span>
-            <input class="mini-input" type="number" inputmode="decimal" id="chaseMin" placeholder="0" style="font-size:18px;">
+            <input class="mini-input" type="number" inputmode="decimal" step="0.01" id="chaseMin" placeholder="0" style="font-size:18px;">
           </div>
           <div class="hint">Due ~15th</div>
         </div>
@@ -418,7 +418,7 @@
           <span class="mini-label">Apple</span>
           <div class="mini-field">
             <span style="font-size:13px;color:#aaa;-webkit-text-fill-color:#aaa;">$</span>
-            <input class="mini-input" type="number" inputmode="decimal" id="appleMin" placeholder="0" style="font-size:18px;">
+            <input class="mini-input" type="number" inputmode="decimal" step="0.01" id="appleMin" placeholder="0" style="font-size:18px;">
           </div>
           <div class="hint">Due ~31st</div>
         </div>
@@ -426,7 +426,7 @@
           <span class="mini-label">BofA</span>
           <div class="mini-field">
             <span style="font-size:13px;color:#aaa;-webkit-text-fill-color:#aaa;">$</span>
-            <input class="mini-input" type="number" inputmode="decimal" id="bofaMin" placeholder="0" style="font-size:18px;">
+            <input class="mini-input" type="number" inputmode="decimal" step="0.01" id="bofaMin" placeholder="0" style="font-size:18px;">
           </div>
           <div class="hint">Due ~3rd</div>
         </div>
@@ -452,8 +452,8 @@
       <div class="card-row" id="rChaseMinRow"><span class="lbl">Chase Minimum</span><span class="val red" id="rChaseMin"></span></div>
       <div class="card-row" id="rBofaRow"><span class="lbl">BofA Minimum</span><span class="val red" id="rBofa"></span></div>
       <div class="card-row" id="rAppleRow"><span class="lbl">Apple Minimum</span><span class="val red" id="rApple"></span></div>
-      <div class="card-row"><span class="lbl">Safety buffer (stays in checking)</span><span class="val red">−$700</span></div>
-      <div class="card-row" style="background:#f9f9f9 !important;"><span class="lbl bold">Total accounted for</span><span class="val red" id="rTotal"></span></div>
+      <div class="card-row"><span class="lbl">Safety buffer (keep in checking)</span><span class="val red">−$700</span></div>
+      <div class="card-row" style="background:#f9f9f9 !important;"><span class="lbl bold">Total obligations this period</span><span class="val red" id="rTotal"></span></div>
     </div>
 
     <!-- Checking context -->
@@ -466,7 +466,7 @@
 
     <div class="pills-row">
       <div class="pill"><div class="pill-lbl">Gross</div><div class="pill-val" id="pGross"></div></div>
-      <div class="pill"><div class="pill-lbl">Accounted</div><div class="pill-val red" id="pAccounted"></div></div>
+      <div class="pill"><div class="pill-lbl">Obligations</div><div class="pill-val red" id="pAccounted"></div></div>
       <div class="pill"><div class="pill-lbl">→ Chase</div><div class="pill-val blue" id="pChase"></div></div>
     </div>
 
@@ -479,6 +479,76 @@
     </div>
     <div class="warn-box" id="warnBox" style="display:none;">⚠️ Tight period — cover essentials only. Nothing extra to Chase.</div>
     <button class="btn-primary" id="logBtn" onclick="logFromCalc()" style="display:none;">Log this payment to Chase Tracker →</button>
+
+    <!-- Minimum Viable Income -->
+    <div id="mviCard" style="display:none; border:2px solid #1a1a1a; border-radius:10px; overflow:hidden; margin-top:0;">
+      <div style="background:#1a1a1a; padding:9px 14px; font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#888; border-bottom:1px solid #333;">Minimum Viable Income</div>
+      <div style="padding:14px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:12px;">
+          <div style="text-align:center; padding:10px 6px; background:#f9f9f9; border:1.5px solid #e8e8e8; border-radius:8px;">
+            <div style="font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#aaa; margin-bottom:4px;">Just Survive</div>
+            <div id="mviSurvive" style="font-size:16px; font-weight:900; color:#e74c3c;"></div>
+            <div style="font-size:9px; color:#aaa; margin-top:2px;">covers mins only</div>
+          </div>
+          <div style="text-align:center; padding:10px 6px; background:#f9f9f9; border:1.5px solid #e8e8e8; border-radius:8px;">
+            <div style="font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#aaa; margin-bottom:4px;">Stay Safe</div>
+            <div id="mviSafe" style="font-size:16px; font-weight:900; color:#f39c12;"></div>
+            <div style="font-size:9px; color:#aaa; margin-top:2px;">$700 buffer</div>
+          </div>
+          <div style="text-align:center; padding:10px 6px; background:#f9f9f9; border:1.5px solid #e8e8e8; border-radius:8px;">
+            <div style="font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#aaa; margin-bottom:4px;">Attack Chase</div>
+            <div id="mviAttack" style="font-size:16px; font-weight:900; color:#2980b9;"></div>
+            <div style="font-size:9px; color:#aaa; margin-top:2px;">+ $200 to Chase</div>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:12px;">
+          <div style="text-align:center; padding:6px; background:#fafafa; border-radius:6px; border:1px solid #f0f0f0;">
+            <div style="font-size:9px; color:#aaa; text-transform:uppercase; letter-spacing:.06em;">hrs needed</div>
+            <div id="mviHrsSurvive" style="font-size:14px; font-weight:900; color:#e74c3c;"></div>
+          </div>
+          <div style="text-align:center; padding:6px; background:#fafafa; border-radius:6px; border:1px solid #f0f0f0;">
+            <div style="font-size:9px; color:#aaa; text-transform:uppercase; letter-spacing:.06em;">hrs needed</div>
+            <div id="mviHrsSafe" style="font-size:14px; font-weight:900; color:#f39c12;"></div>
+          </div>
+          <div style="text-align:center; padding:6px; background:#fafafa; border-radius:6px; border:1px solid #f0f0f0;">
+            <div style="font-size:9px; color:#aaa; text-transform:uppercase; letter-spacing:.06em;">hrs needed</div>
+            <div id="mviHrsAttack" style="font-size:14px; font-weight:900; color:#2980b9;"></div>
+          </div>
+        </div>
+        <div id="mviNote" style="font-size:11.5px; color:#777; text-align:center; line-height:1.5;"></div>
+      </div>
+    </div>
+
+    <!-- Payday Health -->
+    <div id="healthCard" style="display:none; border:1.5px solid #e8e8e8; border-radius:10px; overflow:hidden; margin-top:0;">
+      <div style="background:#f9f9f9; padding:9px 14px; font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#aaa; border-bottom:1px solid #f0f0f0;">Payday Health</div>
+      <div style="padding:14px;">
+        <!-- Zone indicator -->
+        <div id="healthZone" style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+          <div id="healthDot" style="width:12px; height:12px; border-radius:50%; flex-shrink:0;"></div>
+          <div>
+            <div id="healthZoneName" style="font-size:15px; font-weight:700; color:#1a1a1a;"></div>
+            <div id="healthZoneDesc" style="font-size:12px; color:#777; margin-top:1px;"></div>
+          </div>
+        </div>
+        <!-- Breakdown bars -->
+        <div style="margin-bottom:10px;">
+          <div style="display:flex; justify-content:space-between; font-size:11px; color:#aaa; margin-bottom:4px;">
+            <span>Obligations vs Income</span>
+            <span id="healthPct"></span>
+          </div>
+          <div style="background:#f0f0f0; border-radius:99px; height:8px; overflow:hidden;">
+            <div id="healthBar" style="height:100%; border-radius:99px; transition:width .4s ease;"></div>
+          </div>
+        </div>
+        <!-- Key insight -->
+        <div id="healthInsight" style="font-size:12.5px; color:#555; line-height:1.6; padding:10px 12px; background:#fafafa; border-radius:8px; border:1px solid #f0f0f0; margin-bottom:10px;"></div>
+        <!-- Smart suggestions -->
+        <div id="healthSuggestions" style="display:none; border:1px solid #f0f0f0; border-radius:8px; overflow:hidden;">
+          <div style="background:#f9f9f9; padding:7px 12px; font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#aaa; border-bottom:1px solid #f0f0f0;">What to do</div>
+        </div>
+      </div>
+    </div>
   </div>
 </div><!-- end page-calc -->
 
@@ -524,7 +594,7 @@
           <span class="est-lbl">Current balance</span>
           <div style="display:flex;align-items:center;gap:4px;">
             <span style="font-size:14px;color:#aaa;-webkit-text-fill-color:#aaa;">$</span>
-            <input class="bal-input-sm" type="number" inputmode="decimal" id="chaseBal" placeholder="0" oninput="calcMins(); saveCardBals()" style="width:110px;text-align:right;">
+            <input class="bal-input-sm" type="number" inputmode="decimal" step="0.01" id="chaseBal" placeholder="0" oninput="calcMins(); saveCardBals()" style="width:110px;text-align:right;">
           </div>
         </div>
         <div class="est-row"><span class="est-lbl">Monthly interest</span><span class="est-val orange" id="chaseInt">—</span></div>
@@ -544,7 +614,7 @@
           <span class="est-lbl">Current balance</span>
           <div style="display:flex;align-items:center;gap:4px;">
             <span style="font-size:14px;color:#aaa;-webkit-text-fill-color:#aaa;">$</span>
-            <input class="bal-input-sm" type="number" inputmode="decimal" id="bofaBal" placeholder="0" oninput="calcMins(); saveCardBals()" style="width:110px;text-align:right;">
+            <input class="bal-input-sm" type="number" inputmode="decimal" step="0.01" id="bofaBal" placeholder="0" oninput="calcMins(); saveCardBals()" style="width:110px;text-align:right;">
           </div>
         </div>
         <div class="est-row"><span class="est-lbl">Monthly interest</span><span class="est-val orange" id="bofaInt">—</span></div>
@@ -564,7 +634,7 @@
           <span class="est-lbl">Current balance</span>
           <div style="display:flex;align-items:center;gap:4px;">
             <span style="font-size:14px;color:#aaa;-webkit-text-fill-color:#aaa;">$</span>
-            <input class="bal-input-sm" type="number" inputmode="decimal" id="appleBal" placeholder="0" oninput="calcMins(); saveCardBals()" style="width:110px;text-align:right;">
+            <input class="bal-input-sm" type="number" inputmode="decimal" step="0.01" id="appleBal" placeholder="0" oninput="calcMins(); saveCardBals()" style="width:110px;text-align:right;">
           </div>
         </div>
         <div class="est-row"><span class="est-lbl">Monthly interest</span><span class="est-val orange" id="appleInt">—</span></div>
@@ -591,7 +661,7 @@
     <span class="input-label">Starting Chase Balance</span>
     <div class="field-wrap" style="margin-bottom:12px;">
       <span class="field-prefix">$</span>
-      <input class="field-input" type="number" inputmode="decimal" id="startBal" placeholder="0">
+      <input class="field-input" type="number" inputmode="decimal" step="0.01" id="startBal" placeholder="0">
     </div>
     <button class="btn-primary" onclick="setStartBal()">Set Balance →</button>
   </div>
@@ -608,7 +678,7 @@
       <div class="log-row">
         <div class="log-field" style="cursor:pointer;">
           <span class="log-sym">$</span>
-          <input class="log-input" type="number" inputmode="decimal" id="manualAmt" placeholder="Amount">
+          <input class="log-input" type="number" inputmode="decimal" step="0.01" id="manualAmt" placeholder="Amount">
         </div>
         <button class="log-btn" onclick="logManual()">Log →</button>
       </div>
@@ -769,7 +839,7 @@ function addExtra(){
   document.getElementById('eiEmpty').style.display='none';
   const row=document.createElement('div');
   row.className='ei-row'; row.id='row_'+id;
-  row.innerHTML=`<input class="ei-lbl" type="text" id="lbl_${id}" placeholder="e.g. Side hustle, Bonus…"><span class="ei-sym">$</span><input class="ei-amt" type="number" inputmode="decimal" id="amt_${id}" placeholder="0" min="0"><button class="ei-rm" onclick="rmExtra('${id}')">×</button>`;
+  row.innerHTML=`<input class="ei-lbl" type="text" id="lbl_${id}" placeholder="e.g. Side hustle, Bonus…"><span class="ei-sym">$</span><input class="ei-amt" type="number" inputmode="decimal" step="0.01" id="amt_${id}" placeholder="0" min="0"><button class="ei-rm" onclick="rmExtra('${id}')">×</button>`;
   document.getElementById('extraList').appendChild(row);
 }
 function rmExtra(id){
@@ -777,7 +847,11 @@ function rmExtra(id){
   const r=document.getElementById('row_'+id); if(r) r.remove();
   if(extraIds.length===0) document.getElementById('eiEmpty').style.display='block';
 }
-function fmt(n){return '$'+Math.round(n).toLocaleString();}
+function fmt(n){
+  if(n === undefined || n === null) return '$0';
+  const rounded = Math.round(n * 100) / 100;
+  return '$' + rounded.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
 
 function calculate(){
   const is1st=payday==='1st';
@@ -868,6 +942,143 @@ function calculate(){
   } else {
     cb.style.display='none'; wb.style.display='block'; lb.style.display='none';
   }
+
+  // ── PAYDAY HEALTH ──
+  const totalIn = checkingBal > 0 ? gross + checkingBal : gross;
+  const obligationsOnly = taxes + irs + gcash + chaseMin + bofaMin + appleMin; // excluding buffer
+  const afterDeductions = totalIn - obligationsOnly;
+  const pct = Math.min(100, Math.round((obligationsOnly / totalIn) * 100));
+  const healthCard = document.getElementById('healthCard');
+  healthCard.style.display = 'block';
+
+  let zone, dot, barColor, desc, insight;
+  if(afterDeductions < 0){
+    zone='🚨 Danger'; dot='#e74c3c'; barColor='#e74c3c'; desc='Obligations exceed income';
+    insight='Your minimums and deductions cost more than you earned this period. Consider reducing GCash or skipping the IRS set-aside temporarily to avoid overdrafting.';
+  } else if(afterDeductions < 500){
+    zone='🛑 Stop'; dot='#e74c3c'; barColor='#e74c3c'; desc='Under $500 after deductions';
+    insight='You\'ll be below the safe threshold after this payday. Pay minimums only — do not send anything extra to Chase. Focus on getting through to the 15th.';
+  } else if(afterDeductions < 700){
+    zone='⚠️ Caution'; dot='#f39c12'; barColor='#f39c12'; desc='Tight but survivable';
+    insight='You\'ll clear your minimums but there\'s little cushion. Stick to the plan — no extra Chase payments. Watch for any surprise charges this period.';
+  } else if(chaseExtra === 0){
+    zone='✅ Normal'; dot='#27ae60'; barColor='#27ae60'; desc='Safe — minimums covered';
+    insight='You\'re in a safe zone but there\'s nothing left after the buffer to attack Chase. That\'s okay — the 15th payday is your attack window.';
+  } else {
+    zone='🔥 Attack'; dot='#2980b9'; barColor='#2980b9'; desc='Healthy — extra available';
+    insight=`You have ${fmt(chaseExtra)} available to send Chase after covering everything. This is your best kind of payday — don't leave it sitting in checking.`;
+  }
+
+  document.getElementById('healthZoneName').textContent = zone;
+  document.getElementById('healthZoneDesc').textContent = desc;
+  document.getElementById('healthDot').style.background = dot;
+  document.getElementById('healthPct').textContent = pct + '% going to obligations';
+  document.getElementById('healthBar').style.width = pct + '%';
+  document.getElementById('healthBar').style.background = barColor;
+  document.getElementById('healthInsight').textContent = insight;
+
+  // ── SMART SUGGESTIONS ──
+  const suggestEl = document.getElementById('healthSuggestions');
+  const suggestions = [];
+
+  // How many more hours to hit Normal (have $700 buffer + send something to Chase)
+  const targetBalance = obligationsOnly + buffer + 1; // just enough to clear buffer
+  const currentTotal = totalIn;
+  const shortfall = targetBalance - currentTotal;
+
+  if(shortfall > 0){
+    const hoursNeeded = Math.ceil(shortfall / 30);
+    suggestions.push(`⏱ Work <strong>${hoursNeeded} more hours</strong> this period to cover all obligations and stay above the $700 buffer`);
+  }
+
+  // How many hours to actually send something to Chase
+  const chaseTargetShortfall = targetBalance + 200 - currentTotal; // buffer + at least $200 to Chase
+  if(chaseTargetShortfall > 0 && shortfall > 0){
+    const hoursForChase = Math.ceil(chaseTargetShortfall / 30);
+    suggestions.push(`🔥 Work <strong>${hoursForChase} more hours</strong> to send at least $200 extra to Chase`);
+  }
+
+  // GCash reduction suggestion
+  if(afterDeductions < 700 && gcash > 300){
+    const reducedGcash = 300;
+    const gcashSaving = gcash - reducedGcash;
+    suggestions.push(`📱 Reduce GCash to $300 this period — saves <strong>$${gcashSaving}</strong> and gives more breathing room`);
+  }
+
+  // IRS skip suggestion
+  if(afterDeductions < 500 && irs > 0){
+    suggestions.push(`📋 Consider skipping the IRS set-aside this period if your HYSA already has enough saved — frees up <strong>$874</strong>`);
+  }
+
+  // Buffer building suggestion
+  if(chaseExtra > 0 && getbal() > 0){
+    const bal = getbal();
+    const monthsLeft = Math.ceil((bal / chaseExtra) / 2);
+    suggestions.push(`📈 At this rate you'll pay off Chase in ~<strong>${monthsLeft} months</strong> — keep the attack going`);
+  }
+
+  // Checking buffer goal
+  if(afterDeductions < 1000){
+    const hoursFor1k = Math.ceil((1000 - afterDeductions) / 30);
+    suggestions.push(`🏦 To build a healthy $1,000 checking buffer, aim for <strong>${hoursFor1k} more hours</strong> this period`);
+  }
+
+  if(suggestions.length > 0){
+    suggestEl.style.display = 'block';
+    suggestEl.innerHTML = '<div style="background:#f9f9f9; padding:7px 12px; font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#aaa; border-bottom:1px solid #f0f0f0;">What to do</div>' +
+      suggestions.map((s,i) =>
+        `<div style="padding:9px 12px; ${i < suggestions.length-1 ? 'border-bottom:1px solid #f0f0f0;' : ''} font-size:12.5px; color:#555; line-height:1.5;">${s}</div>`
+      ).join('');
+  } else {
+    suggestEl.style.display = 'none';
+  }
+
+  // ── MINIMUM VIABLE INCOME ──
+  const mviCard = document.getElementById('mviCard');
+  mviCard.style.display = 'block';
+
+  // Fixed costs that don't scale with income (IRS, minimums, gcash, buffer)
+  const fixedCosts = irs + chaseMin + bofaMin + appleMin + gcash + buffer;
+  // Tax rate as decimal
+  const tr = (parseFloat(document.getElementById('taxRate').value)||25) / 100;
+  // Existing checking already in account
+  const existingChecking = checkingBal > 0 ? checkingBal : 0;
+
+  // MVI formula: gross * (1 - taxRate) - fixedCosts >= target
+  // gross >= (target + fixedCosts) / (1 - taxRate)
+  // But we subtract existing checking from what gross needs to cover
+  function mviForTarget(target) {
+    const needed = Math.max(0, target + fixedCosts - existingChecking);
+    return Math.ceil(needed / (1 - tr));
+  }
+
+  const mviSurviveGross = mviForTarget(500); // just stay above $500
+  const mviSafeGross = mviForTarget(700);    // $700 buffer
+  const mviAttackGross = mviForTarget(900);  // $700 buffer + $200 to Chase
+
+  const mviSurviveHrs = Math.ceil(mviSurviveGross / 30);
+  const mviSafeHrs = Math.ceil(mviSafeGross / 30);
+  const mviAttackHrs = Math.ceil(mviAttackGross / 30);
+
+  document.getElementById('mviSurvive').textContent = fmt(mviSurviveGross);
+  document.getElementById('mviSafe').textContent = fmt(mviSafeGross);
+  document.getElementById('mviAttack').textContent = fmt(mviAttackGross);
+  document.getElementById('mviHrsSurvive').textContent = mviSurviveHrs + ' hrs';
+  document.getElementById('mviHrsSafe').textContent = mviSafeHrs + ' hrs';
+  document.getElementById('mviHrsAttack').textContent = mviAttackHrs + ' hrs';
+
+  const currentGross = gross;
+  let mviNote = '';
+  if(currentGross >= mviAttackGross){
+    mviNote = '✅ You\'re earning enough to attack Chase this period.';
+  } else if(currentGross >= mviSafeGross){
+    mviNote = `You\'re in the safe zone. Earn ${fmt(mviAttackGross - currentGross)} more to start attacking Chase.`;
+  } else if(currentGross >= mviSurviveGross){
+    mviNote = `You\'re surviving but tight. Earn ${fmt(mviSafeGross - currentGross)} more to reach the safe zone.`;
+  } else {
+    mviNote = `⚠️ You\'re ${fmt(mviSurviveGross - currentGross)} short of covering your minimum obligations. Reduce GCash or tax set-aside to close the gap.`;
+  }
+  document.getElementById('mviNote').textContent = mviNote;
   document.getElementById('results').style.display='block';
   document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
 }
@@ -905,13 +1116,13 @@ function calcMins(){
       return;
     }
     const monthlyRate=c.apr/100/12;
-    const interest=Math.round(bal*monthlyRate);
-    const onePct=Math.round(bal*0.01);
-    const est=Math.max(c.floor, onePct+interest);
-    document.getElementById(c.intId).textContent='$'+interest;
-    document.getElementById(c.pctId).textContent='$'+onePct;
-    document.getElementById(c.minId).textContent='$'+est;
-    document.getElementById(c.ovId).textContent='$'+est;
+    const interest=Math.round(bal*monthlyRate*100)/100;
+    const onePct=Math.round(bal*0.01*100)/100;
+    const est=Math.max(c.floor, Math.round((onePct+interest)*100)/100);
+    document.getElementById(c.intId).textContent='$'+interest.toFixed(2);
+    document.getElementById(c.pctId).textContent='$'+onePct.toFixed(2);
+    document.getElementById(c.minId).textContent='$'+est.toFixed(2);
+    document.getElementById(c.ovId).textContent='$'+est.toFixed(2);
     // Auto-fill calculator minimum field
     const calcEl=document.getElementById(c.calcId);
     if(calcEl) calcEl.value=est;
