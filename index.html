@@ -35,7 +35,7 @@
   .val.blue { color: #2980b9 !important; -webkit-text-fill-color: #2980b9; }
   .val.green { color: #27ae60 !important; -webkit-text-fill-color: #27ae60; }
   .val.orange { color: #e67e22 !important; -webkit-text-fill-color: #e67e22; }
-  .btn-primary { width: 100%; padding: 14px; background: #1a1a1a !important; color: #fff !important; -webkit-text-fill-color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .btn-primary { width: 100%; padding: 14px; background: #1a1a1a !important; color: #fff !important; -webkit-text-fill-color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; -webkit-tap-highlight-color: transparent; display: block; position: relative; z-index: 1; }
   .btn-primary:active { opacity: .85; }
   .input-label { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #aaa !important; -webkit-text-fill-color: #aaa; margin-bottom: 6px; display: block; }
   .field-wrap { display: flex; align-items: center; gap: 6px; border: 1.5px solid #e8e8e8; border-radius: 10px; padding: 10px 14px; background: #fff !important; }
@@ -436,9 +436,6 @@
           </div>
           <div class="hint">Due ~3rd</div>
         </div>
-          </div>
-          <div class="hint">Due ~3rd</div>
-        </div>
       </div>
     </div>
 
@@ -489,7 +486,7 @@
     <div class="warn-box" id="warnBox" style="display:none;">⚠️ Tight period — cover essentials only. Nothing extra to Chase.</div>
     <button class="btn-primary" id="logBtn" onclick="logFromCalc()" style="display:none;">Log this payment to Chase Tracker →</button>
   </div>
-</div>
+</div><!-- end page-calc -->
 
 
 <!-- ════════════════ CARDS ════════════════ -->
